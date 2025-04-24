@@ -31,16 +31,22 @@ class DAO:
             f'Connecting to collection {collection_name} on MongoDB at url {MONGO_URL}')
         client = pymongo.MongoClient(MONGO_URL)
         database = client.edutask
-
         # create the collection if it does not yet exist
         if collection_name not in database.list_collection_names():
             validator = getValidator(collection_name)
             database.create_collection(collection_name, validator=validator)
-
         self.collection = database[collection_name]
 
     def create(self, data: dict):
-        """Creates a new document in the collection associated to this data access object. The creation of a new document must comply to the corresponding validator, which defines the data structure of the collection. In particular, the validator has to make sure that: (1) the data for the new object contains all required properties, (2) every property complies to the bson data type constraint (see https://www.mongodb.com/docs/manual/reference/bson-types/, though we currently only consider Strings and Booleans), (3) and the values of a property flagged with 'uniqueItems' are unique among all documents of the collection.
+        """Creates a new document in the collection associated to this data access object. 
+        The creation of a new document must comply to the corresponding validator, 
+        which defines the data structure of the collection. In particular, the validator 
+        has to make sure that: 
+            (1) the data for the new object contains all required properties, 
+            (2) every property complies to the bson data type constraint 
+                (see https://www.mongodb.com/docs/manual/reference/bson-types/, 
+                though we currently only consider Strings and Booleans), 
+            (3) and the values of a property flagged with 'uniqueItems' are unique among all documents of the collection.
 
         parameters:
             data -- a dict containing key-value pairs compliant to the validator
@@ -182,3 +188,7 @@ class DAO:
             dict -- the document converted to JSON
         """
         return json.loads(json_util.dumps(data))
+
+
+if __name__=="__main__":
+    dao=DAO("todo")
