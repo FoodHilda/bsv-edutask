@@ -35,7 +35,11 @@ def test_db(monkeypatch):
     """Connect to the test MongoDB and return a DAO instance for the 'test_todo' collection."""
     test_url = "mongodb://root:root@localhost:27017/rootDb?authSource=admin"
     monkeypatch.setenv("MONGO_URL", test_url)
-    return DAO("test_todo")
+    
+    dao = DAO("test_todo")
+    yield dao
+    dao.collection.drop()
+
 
 def test_create_valid_data(test_db):
     data = {"description": "ok", "done": True}
