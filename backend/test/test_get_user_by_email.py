@@ -22,19 +22,22 @@ def test_valid_email_single_user(controller, mock_dao):
     #check return value
     assert controller.get_user_by_email("user@example.com") == mock_user
 
-def test_valid_email_multiple_users(controller, mock_dao, capsys):
-    #define multiple mock users
+def test_valid_email_multiple_users_part1(controller, mock_dao, capsys):
     mock_users = [{"email": "user@example.com"}, {"email": "user@example.com"}]
     #set the mock database to return the previously defined users
     mock_dao.find.return_value = mock_users
-    #get return value
-    result = controller.get_user_by_email("user@example.com")
-    #capture what was printed
+    controller.get_user_by_email("user@example.com")
     captured = capsys.readouterr()
-    #check return value
-    assert result == mock_users[0]
-    #check if anything was printed
+    #assert result == mock_users[0]
     assert "more than one user found" in captured.out
+
+def test_valid_email_multiple_users_part2(controller, mock_dao, capsys):
+    mock_users = [{"email": "user@example.com"}, {"email": "user@example.com"}]
+    mock_dao.find.return_value = mock_users
+    result = controller.get_user_by_email("user@example.com")
+    #captured = capsys.readouterr()
+    assert result == mock_users[0]
+    #assert "more than one user found" in captured.out
 
 def test_valid_email_no_user(controller, mock_dao):
     #set the mock database to return to empty
