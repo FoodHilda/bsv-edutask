@@ -41,11 +41,28 @@ def test_db(monkeypatch):
     dao.collection.drop()
 
 
-def test_create_valid_data(test_db):
+def test_create_valid_data_part1(test_db):
     data = {"description": "ok", "done": True}
     result = test_db.create(data)
     assert result["description"] == "ok"
+    #assert result["done"] is True
+    #assert "_id" in result
+
+
+def test_create_valid_data_part2(test_db):
+    data = {"description": "ok", "done": True}
+    result = test_db.create(data)
+    #assert result["description"] == "ok"
     assert result["done"] is True
+    #assert "_id" in result
+
+
+
+def test_create_valid_data_part3(test_db):
+    data = {"description": "ok", "done": True}
+    result = test_db.create(data)
+    #assert result["description"] == "ok"
+    #assert result["done"] is True
     assert "_id" in result
 
 def test_create_missing_field(test_db):
