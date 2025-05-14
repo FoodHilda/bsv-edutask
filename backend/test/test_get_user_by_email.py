@@ -14,6 +14,7 @@ def mock_dao():
 def controller(mock_dao):
     return UserController(dao=mock_dao)
 
+@pytest.mark.unit
 def test_valid_email_single_user(controller, mock_dao):
     #define mock user
     mock_user = {"email": "user@example.com"}
@@ -22,6 +23,7 @@ def test_valid_email_single_user(controller, mock_dao):
     #check return value
     assert controller.get_user_by_email("user@example.com") == mock_user
 
+@pytest.mark.unit
 def test_valid_email_multiple_users_part1(controller, mock_dao, capsys):
     mock_users = [{"email": "user@example.com"}, {"email": "user@example.com"}]
     #set the mock database to return the previously defined users
@@ -31,6 +33,7 @@ def test_valid_email_multiple_users_part1(controller, mock_dao, capsys):
     #assert result == mock_users[0]
     assert "more than one user found" in captured.out
 
+@pytest.mark.unit
 def test_valid_email_multiple_users_part2(controller, mock_dao, capsys):
     mock_users = [{"email": "user@example.com"}, {"email": "user@example.com"}]
     mock_dao.find.return_value = mock_users
@@ -39,17 +42,20 @@ def test_valid_email_multiple_users_part2(controller, mock_dao, capsys):
     assert result == mock_users[0]
     #assert "more than one user found" in captured.out
 
+@pytest.mark.unit
 def test_valid_email_no_user(controller, mock_dao):
     #set the mock database to return to empty
     mock_dao.find.return_value = []
     #check return value
     assert controller.get_user_by_email("nouser@example.com") is None
 
+@pytest.mark.unit
 def test_invalid_email(controller):
     #check if a value error is raised
     with pytest.raises(ValueError):
         controller.get_user_by_email("invalid-email")
 
+@pytest.mark.unit
 def test_dao_exception(controller, mock_dao):
     #set the mock database to return an exception
     mock_dao.find.side_effect = Exception("DB error")
